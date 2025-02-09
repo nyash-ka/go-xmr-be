@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"xmr-be/rpc"
 
 	gin "github.com/gin-gonic/gin"
 )
@@ -22,8 +23,8 @@ func main() {
 	router.SetTrustedProxies([]string{"127.0.0.1"})
 
 	router.GET("/", func(c *gin.Context) {
-		dial_monero_rpc("monero_rpc.crt", "127.0.0.1", 18081, "", "")
-		resp, err := make_rpc_request(MoneroRPCRequest{
+		rpc.DialMoneroServer("monero_rpc.crt", "127.0.0.1", 18081, "", "")
+		resp, err := rpc.MakeRequest(rpc.MoneroRPCRequest{
 			Jsonrpc: "2.0",
 			Method:  "get_address",
 			Params:  map[string]interface{}{},
