@@ -23,7 +23,7 @@ func main() {
 	router.SetTrustedProxies([]string{"127.0.0.1"})
 
 	router.GET("/", func(c *gin.Context) {
-		rpc.DialMoneroServer("monero_rpc.crt", "127.0.0.1", 18081, "", "")
+		rpc.DialMoneroServer("monero_rpc.crt", "127.0.0.1", 18081, "", "", true)
 		resp, err := rpc.MakeRequest(rpc.MoneroRPCRequest{
 			Jsonrpc: "2.0",
 			Method:  "get_address",

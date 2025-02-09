@@ -46,10 +46,11 @@ type MoneroRPCResponse struct {
 * @param port: The Monero RPC server port
 * @param username: The username for basic auth, if any (optional)
 * @param password: The password for basic auth, if any (optional)
+* @param ignoreSslErrors: Whether to ignore SSL errors
 *
 * @return http.Client: The HTTP client connected to the Monero RPC server
  */
-func DialMoneroServer(cert_path string, server string, port int, username string, password string) http.Client {
+func DialMoneroServer(cert_path string, server string, port int, username string, password string, ignoreSslErrors bool) http.Client {
 
 	// Use sync.Once to ensure that the client is created only once
 	rpcClientOnce.Do(func() {
@@ -72,7 +73,10 @@ func DialMoneroServer(cert_path string, server string, port int, username string
 			log.Println("Added custom CA certificate to the certificate pool")
 			tlsConfig = &tls.Config{
 				RootCAs:            caCertPool,
-				InsecureSkipVerify: true,
+				ServerName:         server,
+				ClientCAs:          caCertPool,
+				ClientAuth:         tls.RequireAndVerifyClientCert,
+				InsecureSkipVerify: ignoreSslErrors,
 			}
 
 			rpcSecure = true
